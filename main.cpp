@@ -157,13 +157,23 @@ int main()
   cout << "proba d'arete: " << endl;
   cin >> p;
 
+  n=6;
   adj=new int*[n];
   for (int i = 0; i < n; i++)
      adj[i] = new int[n];
   couleur1= new int[n]; couleur2 = new int[n];
   DSAT = new int[n]; Degre = new int[n];
 
-  genere(p);
+  //genere(p);
+  adj[0][0]=0; adj[0][1]=1; adj[0][2]=0; adj[0][3]=0; adj[0][4]=0; adj[0][5]=1;
+  adj[1][0]=1; adj[1][1]=0; adj[1][2]=1; adj[1][3]=0; adj[1][4]=0; adj[1][5]=0;
+  adj[2][0]=0; adj[2][1]=1; adj[2][2]=0; adj[2][3]=1; adj[2][4]=0; adj[2][5]=0;
+  adj[3][0]=0; adj[3][1]=0; adj[3][2]=1; adj[3][3]=0; adj[3][4]=1; adj[3][5]=0;
+  adj[4][0]=0; adj[4][1]=0; adj[4][2]=0; adj[4][3]=1; adj[4][4]=0; adj[4][5]=1;
+  adj[5][0]=1; adj[5][1]=0; adj[5][2]=0; adj[5][3]=0; adj[5][4]=1; adj[5][5]=0;
+
+  
+
 
   for(int i=0;i<n;i++)
   { cout << "sommet " << i << " : ";
