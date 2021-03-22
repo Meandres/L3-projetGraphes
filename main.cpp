@@ -5,7 +5,8 @@
 
 using namespace std;
 
-int n=35; // nombre de sommets
+int n; // nombre de sommets
+int N; //nb n des graphes de petersen généralisés
 int **adj; //[n][n];  // matrice d'adjacence du graphe
 int *couleur1; //[n];  // couleurs des sommets pour l'agorithme exact
 int *couleur2; //[n]; // couleurs pour DSATUR
@@ -26,6 +27,24 @@ void genere(int p) // genere un graphe non orient� de n sommets et probabilit�
      if(rand()%101 <=p)
       adj[i][j]=adj[j][i]=1;
      else adj[i][j]=adj[j][i]=0;
+  }
+}
+
+void genereGP(int k){
+  for(int i=0; i<N; ++i){
+    for(int j=0; j<N; i++){
+      adj[i][j]=0; adj[i+N][j]=0; adj[i][j+N]=0; adj[i+N][j+N]=0;
+      if(j==(i+1)%N || j==(i-1)%N){
+        adj[i][j]=1;
+      }
+      if(i==j){
+        adj[i+N][j]=1;
+        adj[i][j+N]=1;
+      }
+      if(j==(i+k)%N || j==(i-k)%N){
+        adj[i+N][j+N]=1;
+      }
+    }
   }
 }
 
@@ -151,28 +170,33 @@ int DSATUR()
 int main()
 {
   int p,k,nbc;
-  const int N=50;
-  cout << "nombre de sommets" << endl;
-  cin >> n;
-  cout << "proba d'arete: " << endl;
-  cin >> p;
+  cout << "nombre N des graphes de petersen généralisés (=> nb sommet/2)" << endl;
+  cin >> N;
+  //cout << "proba d'arete: " << endl;
+  //cin >> p;
+  cout << "nombre k" << endl;
+  cin >> k;
 
-  n=6;
+
+  n=2*N;
   adj=new int*[n];
-  for (int i = 0; i < n; i++)
-     adj[i] = new int[n];
+  for (int i = 0; i < N; i++)
+     adj[i] = new int[N];
   couleur1= new int[n]; couleur2 = new int[n];
   DSAT = new int[n]; Degre = new int[n];
 
   //genere(p);
+  genereGP(k);
+
+/*
   adj[0][0]=0; adj[0][1]=1; adj[0][2]=0; adj[0][3]=0; adj[0][4]=0; adj[0][5]=1;
   adj[1][0]=1; adj[1][1]=0; adj[1][2]=1; adj[1][3]=0; adj[1][4]=0; adj[1][5]=0;
   adj[2][0]=0; adj[2][1]=1; adj[2][2]=0; adj[2][3]=1; adj[2][4]=0; adj[2][5]=0;
   adj[3][0]=0; adj[3][1]=0; adj[3][2]=1; adj[3][3]=0; adj[3][4]=1; adj[3][5]=0;
   adj[4][0]=0; adj[4][1]=0; adj[4][2]=0; adj[4][3]=1; adj[4][4]=0; adj[4][5]=1;
   adj[5][0]=1; adj[5][1]=0; adj[5][2]=0; adj[5][3]=0; adj[5][4]=1; adj[5][5]=0;
+*/
 
-  
 
 
   for(int i=0;i<n;i++)
