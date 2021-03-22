@@ -9,13 +9,15 @@ int n=35; // nombre de sommets
 int **adj; //[n][n];  // matrice d'adjacence du graphe
 int *couleur1; //[n];  // couleurs des sommets pour l'agorithme exact
 int *couleur2; //[n]; // couleurs pour DSATUR
-int *DSAT; //[n]; // degrés de saturation
-int *Degre; //[n]; // degrés des sommets
+int *DSAT; //[n]; // degrï¿½s de saturation
+int *Degre; //[n]; // degrï¿½s des sommets
 bool trouve=false; // permet de stopper l'algorithme exact
                    // quand une coloration  a ete trouvee
 
+int H=2, K=1; //paramÃ¨tres de la coloration
 
-void genere(int p) // genere un graphe non orienté de n sommets et probabilité p d'arête entre toute paire de sommets
+
+void genere(int p) // genere un graphe non orientï¿½ de n sommets et probabilitï¿½ p d'arï¿½te entre toute paire de sommets
 {
   srand(time(NULL));
   for(int i=0;i<n-1;i++)
@@ -28,31 +30,55 @@ void genere(int p) // genere un graphe non orienté de n sommets et probabilité p
 }
 
 
-bool convient(int x, int c) // teste si la couleur c peut être donnee au sommet x (elle n'est pas utilisee par un de ses voisins)
+bool convient(int x, int c) // teste si la couleur c peut ï¿½tre donnee au sommet x (elle n'est pas utilisee par un de ses voisins)
 {
      for(int i=0;i<x;i++)
       if(adj[x][i] && (couleur1[i]==c)) return false;
      return true;
 }
+bool convientL21(int x, int c) // teste si la couleur c peut ï¿½tre donnee au sommet x
+{
+     for(int i=0;i<x;i++)
+      if(adj[x][i]){
+        if(abs(couleur1[i] - c)<H) //test si la couleur des voisins est Ã©loignÃ©e d'au moins H
+          return false;
+        for(int j=0; j<n; ++j)
+          if(adj[i][j] && abs(couleur1[j] - c)<K) return false; //test si la couleur des voisins des voisins est Ã©loignÃ©e d'au moins K
+      }
+
+     return true;
+}
 
 
-bool convientDSAT(int x, int c) // teste si la couleur c peut être donnee au sommet x - version pour DSATUR
+bool convientDSAT(int x, int c) // teste si la couleur c peut ï¿½tre donnee au sommet x - version pour DSATUR
 {
      for(int i=0;i<n;i++)
       if(adj[x][i] && (couleur2[i]==c)) return false;
      return true;
 }
+bool convientDSATL21(int x, int c) // teste si la couleur c peut ï¿½tre donnee au sommet x
+{
+     for(int i=0;i<n;i++)
+      if(adj[x][i]){
+        if(abs(couleur2[i] - c)<H) //test si la couleur des voisins est Ã©loignÃ©e d'au moins H
+          return false;
+        for(int j=0; j<n; ++j)
+          if(adj[i][j] && abs(couleur2[j] - c)<K) return false; //test si la couleur des voisins des voisins est Ã©loignÃ©e d'au moins K
+      }
+
+     return true;
+}
 
 void colorRR(int x, int k) // fonction recursive pour tester toutes les couleurs possible pour le sommet x
-{ 
+{
      if(x==n)
-     { cout << "Coloration en " << k << " couleurs trouvée" << endl;
+     { cout << "Coloration en " << k << " couleurs trouvee" << endl;
        for(int i=0;i<n;i++) cout << "couleur de " << i << " : " << couleur1[i] << endl; //int z;cin >> z;
        trouve=true;
      }
      else
      for(int c=1;c<=k;c++)
-      if(convient(x,c)) 
+      if(convientL21(x,c))
 	{couleur1[x]=c;//cout << "=>couleur de " << x << " : " << couleur[x] << endl;
          colorRR(x+1,k);
 	 if(trouve) return;}
@@ -70,7 +96,7 @@ void colorexact(int k) // teste si le graphe possede une coloration en k couleur
 
 
 
-int nbChromatique(int d) // calcule le nombre chromatique en testant à partir de d couleurs et diminuant k tant que c'est possible
+int nbChromatique(int d) // calcule le nombre chromatique en testant ï¿½ partir de d couleurs et diminuant k tant que c'est possible
 {
   int k=d+1;
   do {
@@ -81,8 +107,6 @@ int nbChromatique(int d) // calcule le nombre chromatique en testant à partir de
   while(trouve);
   return k+1;
 }
-
-
 
 
 int dsatMax()
@@ -106,36 +130,36 @@ int DSATUR()
     DSAT[i]=Degre[i];
   }
 
-  while(nb<n)  // tant qu'on a pas colorié tous les sommets
+  while(nb<n)  // tant qu'on a pas coloriï¿½ tous les sommets
   {
     c=1;
-    x=dsatMax(); // on choisit le sommet de DSAT max non encore colorié
-    while(!convientDSAT(x,c)) c++; // on cherche la plus petite couleur disponible pour ce sommet
-    for(int j=0; j<n;j++) // mise à jour des DSAT
+    x=dsatMax(); // on choisit le sommet de DSAT max non encore coloriï¿½
+    while(!convientDSATL21(x,c)) c++; // on cherche la plus petite couleur disponible pour ce sommet
+    for(int j=0; j<n;j++) // mise ï¿½ jour des DSAT
      {
-       if(adj[x][j] && convientDSAT(j,c)) DSAT[j]++; // j n'avait aucun voisin colorié c,on incrémente donc son DSAT
+       if(adj[x][j] && convientDSATL21(j,c)) DSAT[j]++; // j n'avait aucun voisin coloriï¿½ c,on incrï¿½mente donc son DSAT
      }
     couleur2[x]=c;
     if(cmax<c) cmax=c;
     nb++;
   }
-  
+
   return cmax;
 }
 
 
 int main()
 {
-  int p,k,nbc; 
+  int p,k,nbc;
   const int N=50;
   cout << "nombre de sommets" << endl;
   cin >> n;
-  cout << "proba d'arête: " << endl;
+  cout << "proba d'arete: " << endl;
   cin >> p;
 
-  adj=new int*[n]; 
+  adj=new int*[n];
   for (int i = 0; i < n; i++)
-     adj[i] = new int[n]; 
+     adj[i] = new int[n];
   couleur1= new int[n]; couleur2 = new int[n];
   DSAT = new int[n]; Degre = new int[n];
 
@@ -150,12 +174,12 @@ int main()
 
   k=DSATUR();
   cout << "DSAT: coloration en " << k << " couleurs : " << endl;
-  for(int i=0;i<n;i++) 
-     cout << "couleur de " << i << " : " << couleur2[i] << endl; 
+  for(int i=0;i<n;i++)
+     cout << "couleur de " << i << " : " << couleur2[i] << endl;
 
   cout << "ColorExact :" << endl;
   nbc=nbChromatique(k);
-  cout << "Nombre chromatique : " << nbc << endl; 
+  cout << "Nombre chromatique : " << nbc << endl;
 
   return 0;
 }
