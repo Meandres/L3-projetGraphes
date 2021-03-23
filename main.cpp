@@ -17,22 +17,9 @@ bool trouve=false; // permet de stopper l'algorithme exact
 
 int H=2, K=1; //paramètres de la coloration
 
-
-void genere(int p) // genere un graphe non orient� de n sommets et probabilit� p d'ar�te entre toute paire de sommets
-{
-  srand(time(NULL));
-  for(int i=0;i<n-1;i++)
-  {
-    for(int j=i+1;j<n;j++)
-     if(rand()%101 <=p)
-      adj[i][j]=adj[j][i]=1;
-     else adj[i][j]=adj[j][i]=0;
-  }
-}
-
 void genereGP(int k){
   for(int i=0; i<N; ++i){
-    for(int j=0; j<N; i++){
+    for(int j=0; j<N; j++){
       adj[i][j]=0; adj[i+N][j]=0; adj[i][j+N]=0; adj[i+N][j+N]=0;
       if(j==(i+1)%N || j==(i-1)%N){
         adj[i][j]=1;
@@ -47,14 +34,6 @@ void genereGP(int k){
     }
   }
 }
-
-
-bool convient(int x, int c) // teste si la couleur c peut �tre donnee au sommet x (elle n'est pas utilisee par un de ses voisins)
-{
-     for(int i=0;i<x;i++)
-      if(adj[x][i] && (couleur1[i]==c)) return false;
-     return true;
-}
 bool convientL21(int x, int c) // teste si la couleur c peut �tre donnee au sommet x
 {
      for(int i=0;i<x;i++)
@@ -65,14 +44,6 @@ bool convientL21(int x, int c) // teste si la couleur c peut �tre donnee au so
           if(adj[i][j] && abs(couleur1[j] - c)<K) return false; //test si la couleur des voisins des voisins est éloignée d'au moins K
       }
 
-     return true;
-}
-
-
-bool convientDSAT(int x, int c) // teste si la couleur c peut �tre donnee au sommet x - version pour DSATUR
-{
-     for(int i=0;i<n;i++)
-      if(adj[x][i] && (couleur2[i]==c)) return false;
      return true;
 }
 bool convientDSATL21(int x, int c) // teste si la couleur c peut �tre donnee au sommet x
@@ -134,7 +105,6 @@ int dsatMax()
   for(int i=0;i<n;i++)
   if(couleur2[i]==0 && (DSAT[i]>maxDSAT || (DSAT[i]==maxDSAT && Degre[i]>maxDeg)))
    { maxDSAT=DSAT[i]; maxDeg=Degre[i]; smax=i;}
-   //cout << "sommet " << smax << " choisi" << endl;
   return smax;
 }
 
@@ -180,15 +150,14 @@ int main()
 
   n=2*N;
   adj=new int*[n];
-  for (int i = 0; i < N; i++)
-     adj[i] = new int[N];
+  for (int i = 0; i < n; i++)
+     adj[i] = new int[n];
   couleur1= new int[n]; couleur2 = new int[n];
   DSAT = new int[n]; Degre = new int[n];
 
-  //genere(p);
   genereGP(k);
 
-/*
+/* //Exemple avec C6
   adj[0][0]=0; adj[0][1]=1; adj[0][2]=0; adj[0][3]=0; adj[0][4]=0; adj[0][5]=1;
   adj[1][0]=1; adj[1][1]=0; adj[1][2]=1; adj[1][3]=0; adj[1][4]=0; adj[1][5]=0;
   adj[2][0]=0; adj[2][1]=1; adj[2][2]=0; adj[2][3]=1; adj[2][4]=0; adj[2][5]=0;
@@ -198,14 +167,14 @@ int main()
 */
 
 
-
+/* affichage du graphe
   for(int i=0;i<n;i++)
   { cout << "sommet " << i << " : ";
     for(int j=0;j<n;j++)
       if(adj[i][j]) cout << j << " ";
     cout << endl;
   }
-
+*/
   k=DSATUR();
   cout << "DSAT: coloration en " << k << " couleurs : " << endl;
   for(int i=0;i<n;i++)
