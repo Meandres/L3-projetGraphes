@@ -243,9 +243,14 @@ int main(int argc, char *argv[])
   couleur1= new int[n]; couleur2 = new int[n]; couleurTamp = new int[n];
   DSAT = new int[n]; Degre = new int[n];
   genereGP(k);
+  //genereG();
+
   cout << " DSATUR " << endl;
   k=DSATUR();
   affichageDSAT(K);
+
+
+
   cout << "ColorExact :" << endl;
   nbc=nbChromatique(n);
   affichageColorExact(K);
