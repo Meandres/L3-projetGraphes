@@ -38,6 +38,35 @@ void genereGP(int k){
     }
   }
 }
+void genereG(){
+  srand(time(NULL));
+  vector<int> pos;
+  int rd, i;
+  for(i=0; i<N; ++i){
+    for(int j=0; j<N; ++j){
+      adj[i][j]=0; adj[i+N][j]=0; adj[i][j+N]=0; adj[i+N][j+N]=0;
+    }
+    pos.push_back(N+i);
+  }
+  for(i=0; i<N; ++i){
+    adj[i][(i+1)%N]=1;
+    if(i==0)
+      adj[i][N-1]=1;
+    else
+      adj[i][(i-1)%N]=1;
+
+    adj[i+N][(i+1)%N + N]=1;
+    if(i==0)
+      adj[i+N][N-1 + N]=1;
+    else
+      adj[i+N][(i-1)%N + N]=1;
+
+    rd=rand()%pos.size();
+    adj[i][pos.at(rd)]=1;
+    adj[pos.at(rd)][i]=1;
+    pos.erase(pos.begin()+rd);
+  }
+}
 bool convientL21(int x, int c) // teste si la couleur c peut �tre donnee au sommet x
 {
      for(int i=0;i<x;i++)
