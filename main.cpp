@@ -8,6 +8,8 @@
 
 using namespace std;
 
+// aller
+
 int n; // nombre de sommets
 int N; //nb n des graphes de petersen généralisés
 int **adj; //[n][n];  // matrice d'adjacence du graphe
