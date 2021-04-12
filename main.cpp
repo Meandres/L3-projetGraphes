@@ -10,6 +10,7 @@ int N; //nb n des graphes de petersen généralisés
 int **adj; //[n][n];  // matrice d'adjacence du graphe
 int *couleur1; //[n];  // couleurs des sommets pour l'agorithme exact
 int *couleur2; //[n]; // couleurs pour DSATUR
+int *couleurTamp;
 int *DSAT; //[n]; // degr�s de saturation
 int *Degre; //[n]; // degr�s des sommets
 bool trouve=false; // permet de stopper l'algorithme exact
@@ -62,9 +63,12 @@ bool convientDSATL21(int x, int c) // teste si la couleur c peut �tre donnee a
 void colorRR(int x, int k) // fonction recursive pour tester toutes les couleurs possible pour le sommet x
 {
      if(x==n)
-     { cout << "Coloration en " << k << " couleurs trouvee" << endl;
-       for(int i=0;i<n;i++) cout << "couleur de " << i << " : " << couleur1[i] << endl; //int z;cin >> z;
+     { //cout << "Coloration en " << k << " couleurs trouvee" << endl;
+       //for(int i=0;i<n;i++) cout << "couleur de " << i << " : " << couleur1[i] << endl; //int z;cin >> z;
        trouve=true;
+       for (int i = 0; i < N*2; i++) {
+         couleurTamp[i] = couleur1[i];
+       }
      }
      else
      for(int c=1;c<=k;c++)
@@ -135,24 +139,49 @@ int DSATUR()
 
   return cmax;
 }
+void affichageDSAT(int k){
+    cout << "n : " << N << " k : " << k << endl;
+    for (int i = 0; i < N ; i++) {
+        cout << couleur2[i] << " ";
+    }
+    cout << endl;
+    for (int i = N; i < N*2 ; i++) {
+        cout << couleur2[i] << " ";
+    }
+    cout << endl <<endl;
+}
+
+void affichageColorExact(int k){
+    cout << "n : " << N << " k : " << k << endl;
+    for (int i = 0; i < N ; i++) {
+        cout << couleurTamp[i] << " ";
+    }
+    cout << endl;
+    for (int i = N; i < N*2 ; i++) {
+        cout << couleurTamp[i] << " ";
+    }
+    cout << endl <<endl;
+}
 
 
 int main()
 {
-  int p,k,nbc;
+  int p,k,K,nbc;
   cout << "nombre N des graphes de petersen généralisés (=> nb sommet/2)" << endl;
   cin >> N;
   //cout << "proba d'arete: " << endl;
   //cin >> p;
   cout << "nombre k" << endl;
-  cin >> k;
+  cin >> K;
+  
+  
 
 
   n=2*N;
   adj=new int*[n];
   for (int i = 0; i < n; i++)
      adj[i] = new int[n];
-  couleur1= new int[n]; couleur2 = new int[n];
+  couleur1= new int[n]; couleur2 = new int[n]; couleurTamp = new int[n];
   DSAT = new int[n]; Degre = new int[n];
 
   genereGP(k);
@@ -167,22 +196,15 @@ int main()
 */
 
 
-/* affichage du graphe
-  for(int i=0;i<n;i++)
-  { cout << "sommet " << i << " : ";
-    for(int j=0;j<n;j++)
-      if(adj[i][j]) cout << j << " ";
-    cout << endl;
-  }
-*/
+  cout << " DSATUR " << endl;
   k=DSATUR();
-  cout << "DSAT: coloration en " << k << " couleurs : " << endl;
-  for(int i=0;i<n;i++)
-     cout << "couleur de " << i << " : " << couleur2[i] << endl;
+  affichageDSAT(K);
 
+    
+   
   cout << "ColorExact :" << endl;
-  nbc=nbChromatique(k);
-  cout << "Nombre chromatique : " << nbc << endl;
+  nbc=nbChromatique(n);
+  affichageColorExact(K);
 
   return 0;
 }
