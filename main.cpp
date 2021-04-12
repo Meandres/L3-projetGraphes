@@ -4,7 +4,8 @@
 #include <new>
 #include <fstream>
 #include <time.h>
-
+#include <vector>
+#include <random>
 
 using namespace std;
 
@@ -205,14 +206,22 @@ void testTempsExec(){
     ofstream myfile;
     myfile.open("test.csv");
     myfile << "Valeur de n; Valeur de k; temps exec colorExact; temps exec DSATUR \n";
-    for (int i = 10 ; i < 1000 ; i++) {
-        for (int j = 1; j < 50; j++) {
-            N = i*i;
-            K = j*2;
+    for (int i = 10 ; i < 15 ; i++) {
+       // for (int j = 1; j < 50; j++) {
+            N = i;
+            n=2*N;
+            adj=new int*[n];
+            for (int x = 0; x < n; x++)
+               adj[x] = new int[n];
+            couleur1= new int[n]; couleur2 = new int[n]; couleurTamp = new int[n];
+            DSAT = new int[n]; Degre = new int[n];
+            genereGP(K);
+            
             t1 = clock();
             nbChromatique(K);
             t2 = clock();
             tempsColorExact = (double)(t2 - t1)/CLOCKS_PER_SEC;
+            affichageColorExact(K);
             
             t1 = clock();
             DSATUR();
@@ -224,7 +233,7 @@ void testTempsExec(){
             
             
             
-        }
+     //   }
     }
     
     myfile.close();
@@ -244,7 +253,7 @@ int main(int argc, char *argv[])
      adj[i] = new int[n];
   couleur1= new int[n]; couleur2 = new int[n]; couleurTamp = new int[n];
   DSAT = new int[n]; Degre = new int[n];
-  genereGP(k);
+  genereGP(K);
   //genereG();
 
   cout << " DSATUR " << endl;
