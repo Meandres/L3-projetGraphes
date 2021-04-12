@@ -2,6 +2,9 @@
 #include <iostream>
 #include <cmath>
 #include <new>
+#include <fstream>
+#include <time.h>
+
 
 using namespace std;
 
@@ -139,6 +142,8 @@ int DSATUR()
 
   return cmax;
 }
+
+
 void affichageDSAT(int k){
     cout << "n : " << N << " k : " << k << endl;
     for (int i = 0; i < N ; i++) {
@@ -148,7 +153,7 @@ void affichageDSAT(int k){
     for (int i = N; i < N*2 ; i++) {
         cout << couleur2[i] << " ";
     }
-    cout << endl <<endl;
+    cout << endl << endl;
 }
 
 void affichageColorExact(int k){
@@ -160,51 +165,68 @@ void affichageColorExact(int k){
     for (int i = N; i < N*2 ; i++) {
         cout << couleurTamp[i] << " ";
     }
-    cout << endl <<endl;
+    cout << endl << endl;
+}
+
+void testTempsExec(){
+    float tempsColorExact, tempsDSAT;
+    clock_t t1, t2;
+    ofstream myfile;
+    myfile.open("test.csv");
+    myfile << "Valeur de n; Valeur de k; temps exec colorExact; temps exec DSATUR \n";
+    for (int i = 10 ; i < 1000 ; i++) {
+        for (int j = 1; j < 50; j++) {
+            N = i*i;
+            K = j*2;
+            t1 = clock();
+            nbChromatique(K);
+            t2 = clock();
+            tempsColorExact = (double)(t2 - t1)/CLOCKS_PER_SEC;
+            
+            t1 = clock();
+            DSATUR();
+            t2 = clock();
+            tempsDSAT = (double)(t2 - t1)/CLOCKS_PER_SEC;
+           
+            myfile << N << ";" << K << ";" << tempsColorExact << ";" << tempsDSAT << "\n";
+            
+            
+            
+            
+        }
+    }
+    
+    myfile.close();
+    
 }
 
 
-int main()
+int main(int argc, char *argv[])
 {
   int p,k,K,nbc;
-  cout << "nombre N des graphes de petersen généralisés (=> nb sommet/2)" << endl;
-  cin >> N;
-  //cout << "proba d'arete: " << endl;
-  //cin >> p;
-  cout << "nombre k" << endl;
-  cin >> K;
+  K = atoi(argv[2]);
+  N = atoi(argv[1]);
   
-  
-
-
   n=2*N;
   adj=new int*[n];
   for (int i = 0; i < n; i++)
      adj[i] = new int[n];
   couleur1= new int[n]; couleur2 = new int[n]; couleurTamp = new int[n];
   DSAT = new int[n]; Degre = new int[n];
-
   genereGP(k);
-
-/* //Exemple avec C6
-  adj[0][0]=0; adj[0][1]=1; adj[0][2]=0; adj[0][3]=0; adj[0][4]=0; adj[0][5]=1;
-  adj[1][0]=1; adj[1][1]=0; adj[1][2]=1; adj[1][3]=0; adj[1][4]=0; adj[1][5]=0;
-  adj[2][0]=0; adj[2][1]=1; adj[2][2]=0; adj[2][3]=1; adj[2][4]=0; adj[2][5]=0;
-  adj[3][0]=0; adj[3][1]=0; adj[3][2]=1; adj[3][3]=0; adj[3][4]=1; adj[3][5]=0;
-  adj[4][0]=0; adj[4][1]=0; adj[4][2]=0; adj[4][3]=1; adj[4][4]=0; adj[4][5]=1;
-  adj[5][0]=1; adj[5][1]=0; adj[5][2]=0; adj[5][3]=0; adj[5][4]=1; adj[5][5]=0;
-*/
-
-
   cout << " DSATUR " << endl;
   k=DSATUR();
   affichageDSAT(K);
-
-    
-   
   cout << "ColorExact :" << endl;
   nbc=nbChromatique(n);
   affichageColorExact(K);
+    
+    
+  testTempsExec();
+    
+
 
   return 0;
+    
+    
 }
