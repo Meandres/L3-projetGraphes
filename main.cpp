@@ -35,6 +35,35 @@ void genereGP(int k){
     }
   }
 }
+void genereG(){
+  srand(time(NULL));
+  vector<int> pos;
+  int rd, i;
+  for(i=0; i<N; ++i){
+    for(int j=0; j<N; ++j){
+      adj[i][j]=0; adj[i+N][j]=0; adj[i][j+N]=0; adj[i+N][j+N]=0;
+    }
+    pos.push_back(N+i);
+  }
+  for(i=0; i<N; ++i){
+    adj[i][(i+1)%N]=1;
+    if(i==0)
+      adj[i][N-1]=1;
+    else
+      adj[i][(i-1)%N]=1;
+
+    adj[i+N][(i+1)%N + N]=1;
+    if(i==0)
+      adj[i+N][N-1 + N]=1;
+    else
+      adj[i+N][(i-1)%N + N]=1;
+
+    rd=rand()%pos.size();
+    adj[i][pos.at(rd)]=1;
+    adj[pos.at(rd)][i]=1;
+    pos.erase(pos.begin()+rd);
+  }
+}
 bool convientL21(int x, int c) // teste si la couleur c peut �tre donnee au sommet x
 {
      for(int i=0;i<x;i++)
@@ -173,9 +202,6 @@ int main()
   //cin >> p;
   cout << "nombre k" << endl;
   cin >> K;
-  
-  
-
 
   n=2*N;
   adj=new int*[n];
@@ -185,23 +211,14 @@ int main()
   DSAT = new int[n]; Degre = new int[n];
 
   genereGP(k);
-
-/* //Exemple avec C6
-  adj[0][0]=0; adj[0][1]=1; adj[0][2]=0; adj[0][3]=0; adj[0][4]=0; adj[0][5]=1;
-  adj[1][0]=1; adj[1][1]=0; adj[1][2]=1; adj[1][3]=0; adj[1][4]=0; adj[1][5]=0;
-  adj[2][0]=0; adj[2][1]=1; adj[2][2]=0; adj[2][3]=1; adj[2][4]=0; adj[2][5]=0;
-  adj[3][0]=0; adj[3][1]=0; adj[3][2]=1; adj[3][3]=0; adj[3][4]=1; adj[3][5]=0;
-  adj[4][0]=0; adj[4][1]=0; adj[4][2]=0; adj[4][3]=1; adj[4][4]=0; adj[4][5]=1;
-  adj[5][0]=1; adj[5][1]=0; adj[5][2]=0; adj[5][3]=0; adj[5][4]=1; adj[5][5]=0;
-*/
-
+  //genereG();
 
   cout << " DSATUR " << endl;
   k=DSATUR();
   affichageDSAT(K);
 
-    
-   
+
+
   cout << "ColorExact :" << endl;
   nbc=nbChromatique(n);
   affichageColorExact(K);
