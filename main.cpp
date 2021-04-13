@@ -12,8 +12,8 @@ using namespace std;
 
 // aller
 
-int n; // nombre de sommets
-int N; //nb n des graphes de petersen généralisés
+long n; // nombre de sommets
+long N; //nb n des graphes de petersen généralisés
 int **adj; //[n][n];  // matrice d'adjacence du graphe
 int *couleur1; //[n];  // couleurs des sommets pour l'agorithme exact
 int *couleur2; //[n]; // couleurs pour DSATUR
@@ -210,7 +210,7 @@ void outputTempsExec(string fic, bool prismes){
   myfile << "Valeur de n; Valeur de k; temps exec colorExact; temps exec DSATUR \n";
   for (int i = 4 ; i <= 32 ; i*2) {
     for (int j = 1; j <= 5; j++) {
-      N = pow(2, 32);
+      N = pow(2, i);
       k=N*j/6;
       n=2*N;
       adj=new int*[n];
@@ -245,10 +245,11 @@ int main(int argc, char *argv[])
   bool correct=true, optG=false, optO=false;
   int p,k,nbc;
   string opt;
-  if(argc<=2)
+  if(argc<=2){
     correct=false;
+  }
   if(correct){
-    if(strcmp(argv[1], "-o")){
+    if(strcmp(argv[1], "-o")==0){
       if(argc>=3){
         optO=true;
         opt=argv[2];
@@ -274,7 +275,6 @@ int main(int argc, char *argv[])
         correct=false;
     }
   }
-
 
 if(!correct){
   cerr << "Usage : main N K/-g\nOu : main -o nomFic (-g)\nAvec N le nombre de sommet d'un cycle.\nK le parametre des graphes de Petersen ou -g qui indique que l'on veut les prismes.\n-o nomFic qui permet la sortie dans un fichier csv" << endl;
