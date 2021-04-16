@@ -116,9 +116,10 @@ void colorRR(long x, long k) // fonction recursive pour tester toutes les couleu
 
 void colorexact(long k) // teste si le graphe possede une coloration en k couleurs en essayant toutes les combinaisons
 {
-    for(long i=0;i<n;i++)
-     couleur1[i]=0;
-     colorRR(0,k);
+    for(long i=0;i<n;i++){
+      couleur1[i]=0;
+    }
+    colorRR(0,k);
      //if(!trouve) cout << "Pas de coloration en " << k <<" couleurs" << endl;
 }
 
@@ -207,17 +208,17 @@ void outputTempsExec(string fic, bool prismes){
   clock_t t1, t2;
   ofstream myfile;
   myfile.open(fic);
-  myfile << "Valeur de n; Valeur de k; temps exec colorExact; temps exec DSATUR \n";
-  for (int i = 4 ; i <= 16 ; i*2) {
-    for (int j = 1; j <= 2; j++) {
-      N = pow(2, i);
+  myfile << "Valeur de n; Valeur de k; temps exec colorExact\n";
+ for (int i = 10 ; i <= 20 ; i+=2) {
+    for (int j = 2; j <= 4; j++) {
+      cout << i << " " << j << endl;
+      N = i;
       k=floor(N*j/6);
       n=2*N;
       adj=new long*[n];
       for (long x = 0; x < n; x++)
         adj[x] = new long[n];
-      couleur1= new long[n]; couleur2 = new long[n]; couleurTamp = new long[n];
-      DSAT = new long[n]; Degre = new long[n];
+      couleur1= new long[n]; couleurTamp = new long[n];
       if(prismes)
         genereG();
       else
@@ -228,12 +229,38 @@ void outputTempsExec(string fic, bool prismes){
       t2 = clock();
       tempsColorExact = (double)(t2 - t1)/CLOCKS_PER_SEC;
 
+      free(adj); free(couleur1); free(couleurTamp);
+
+      myfile << N << ";" << k << ";" << tempsColorExact << "\n";
+    }
+  }
+  cout << "dsat" << endl;
+  myfile << "Valeur de n; Valeur de k; temps exec DSAT\n";
+  for(int i=8; i<=15; ++i){
+    for(int j=2; j<=4; ++j){
+      cout << i << " " << j << endl;
+      N = pow(2, i);
+      k=floor(N*j/6);
+      n=2*N;
+      adj=new long*[n];
+      for (long x = 0; x < n; x++)
+        adj[x] = new long[n];
+      couleur2 = new long[n]; couleurTamp = new long[n];
+      DSAT = new long[n]; Degre = new long[n];
+
+      if(prismes)
+        genereG();
+      else
+        genereGP(k);
+
       t1 = clock();
       DSATUR();
       t2 = clock();
       tempsDSAT = (double)(t2 - t1)/CLOCKS_PER_SEC;
 
-      myfile << N << ";" << K << ";" << tempsColorExact << ";" << tempsDSAT << "\n";
+      free(couleur2); free(couleurTamp); free(DSAT); free(Degre);
+
+      myfile << N << ";" << k << ";" << tempsDSAT << "\n";
     }
   }
   myfile.close();
@@ -275,6 +302,7 @@ int main(int argc, char *argv[])
         correct=false;
     }
   }
+
 
 if(!correct){
   cerr << "Usage : main N K/-g\nOu : main -o nomFic (-g)\nAvec N le nombre de sommet d'un cycle.\nK le parametre des graphes de Petersen ou -g qui indique que l'on veut les prismes.\n-o nomFic qui permet la sortie dans un fichier csv" << endl;
