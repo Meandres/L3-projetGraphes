@@ -125,7 +125,7 @@ void colorexact(long k) // teste si le graphe possede une coloration en k couleu
 
 
 
-long nbChromatique(long d) // calcule le nombre chromatique en testant � partir de d couleurs et diminuant k tant que c'est possible
+long nbChromatique(long d) // calcule le nombre chromatique en testant à partir de d couleurs et diminuant k tant que c'est possible
 {
   long k=d+1;
   do {
@@ -147,8 +147,7 @@ long dsatMax()
   return smax;
 }
 
-long DSATUR()
-{
+long DSATUR(){
   long nb=0,c,x,cmax=0;
   for(long i=0;i<n;i++)
   {
@@ -171,7 +170,6 @@ long DSATUR()
     if(cmax<c) cmax=c;
     nb++;
   }
-
   return cmax;
 }
 
@@ -209,7 +207,7 @@ void outputTempsExec(string fic, bool prismes){
   ofstream myfile;
   myfile.open(fic);
   myfile << "Valeur de n; Valeur de k; temps exec colorExact\n";
- for (int i = 10 ; i <= 20 ; i+=2) {
+  for (int i = 10 ; i <= 20 ; i+=2) {
     for (int j = 2; j <= 4; j++) {
       cout << i << " " << j << endl;
       N = i;
@@ -236,7 +234,7 @@ void outputTempsExec(string fic, bool prismes){
   }
   cout << "dsat" << endl;
   myfile << "Valeur de n; Valeur de k; temps exec DSAT\n";
-  for(int i=8; i<=15; ++i){
+  for(int i=8; i<=13; ++i){
     for(int j=2; j<=4; ++j){
       cout << i << " " << j << endl;
       N = pow(2, i);
